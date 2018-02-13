@@ -19,11 +19,14 @@ var configData = {
     divGIF: "#GIFdiv",
     divTopicButtons: "#topicButtons",
     divAnswerButtons: "#answer_buttons",
-    divAnswerResult: "#modAnswerDiv",
-    divGameOverResult: "#modGameOverResults",
+    classTopicBttn: "btn-topic",       //for mass selection
+    dataTopicBttn: "data-bttnTopic",  //used on topic buttons
+    classGif: "img-gif",       //for mass selection
+    dataGif: "data-gif",       //returned on click
     imgDir: "assets/images/",
-    histQty: 5,  //how many history  to store
-    GiphyURL: "",  //url of the site
+    gifQty: 5,  //how many GIF to display
+    GiphyURL: "https://api.giphy.com/v1/gifs/trending?",  //url of the site
+    GiphyStr: "api_key=",
     GiphyKey: "EH4xHA1FINek56s43yv4PWrOXL7noTOb"  //key for this project
 };
 
@@ -51,7 +54,12 @@ var topicObj = {
 
     initWorkingArray: function () {
         //loads the working aray from the preset array
-        var stopVal = this.topicsPreset.length;
+        var stopVal = this.topicsWorkingArray.length;
+        for (var i = 0; i < stopVal; i++) {
+            this.topicsWorkingArray.pop();
+        };
+
+        stopVal = this.topicsPreset.length;
         for (var i = 0; i < stopVal; i++) {
             this.addTopic(this.topicsPreset[i]);  //push to working array
         };
@@ -78,6 +86,8 @@ var singleButtonObj = {
 };
 
 var buttonObj = {
+    currSingleButtonObj: singleButtonObj,
+
     buttonArray: [],  //array pf singleButtonObj
 
     addButtonToArray: function (singleBttnObjIn) {
@@ -96,13 +106,14 @@ var buttonObj = {
     addNewButton: function (topicIn) {
         //takes a topic and adds a button to page
         //assume topic in array already
-        singleButtonObj.topic = topicIn;
-        singleButtonObj.searchTerm = topicIn;  //right now both the same
-        this.addButtonToArray(singleButtonObj);
+        this.currSingleButtonObj.topic = topicIn;
+        this.currSingleButtonObj.searchTerm = topicIn;  //right now both the same
+        this.addButtonToArray(this.currSingleButtonObj);
         var divButtons = $(configData.divTopicButtons);
         var newButton = $("<button>");
-        $(newButton).addClass("btn");
-        $(newButton).addClass("btn-info");
+        $(newButton).addClass("btn");       //HTML
+        $(newButton).addClass("btn-info");  //bootstrap
+        $(newButton).addClass(configData.classTopicBttn);  //for mass adds
         $(newButton).css("margin", "5px");
         $(newButton).text(topicIn);
         $(newButton).attr("data-button", this.buttonArray.length - 1);
@@ -120,7 +131,7 @@ var buttonObj = {
         };
     },
 
-    retSearchStr: function(bttnNum) {
+    retSearchStr: function (bttnNum) {
         //returns the search string for a button
         //normally just the text on the button
         //but have made allotments to make it different
@@ -135,6 +146,7 @@ var buttonObj = {
 
 var gifSingleObj = {
     status: "",     //
+    TagID: "",     //id used to create the tag on page
     urlStill: "",
     urlAnimated: "",
     topic: "",         //topic associated with
@@ -145,6 +157,8 @@ var gifSingleObj = {
 
 var GIFobj = {
     //everything associated with all the GIF's
+    currSingleGIFobj: gifSingleObj,
+
     GIFarray: [],  //array of gifSingleObj
 
     clearGIFdisplay: function () {
@@ -152,19 +166,97 @@ var GIFobj = {
         divGIF.html("");
     },
 
-    clearEverything: function () {
-        //clear out all the GIF's on the page
-        this.clearGIFdisplay();
-
+    clearGIFarray: function () {
         //now clear out the array
         var endVal = GIFarray.length;
-        for ( var i=0; i<endVal; i++)
-        {
+        for (var i = 0; i < endVal; i++) {
             this.GIFarray.pop();
+        };
+    },
+
+    clearEverything: function () {
+        //clear out GIF's on page and in array
+        this.clearGIFdisplay();
+        this.clearGIFarray();
+    },
+
+    stopGIF: function (numIn) {
+        //stops a GIF by swapping url from
+        var urlStatic = this.GIFarray[numIn].urlStill;
+        var GIFelem = $("#" + this.GIFarray[numIn].TagID)
+        $(GIFelem).attr("src", urlStatic);
+        this.GIFarray[numIn].status = "still";
+    },
+
+    animateGIF: function (numIn) {
+        //stops a GIF by swapping url from
+        var urlMoving = this.GIFarray[numIn].urlAnimated;
+        var GIFelem = $("#" + this.GIFarray[numIn].TagID)
+        $(GIFelem).attr("src", urlMoving);
+        this.GIFarray[numIn].status = "moving";
+    },
+
+    returnGIFanimationStatus: function (numIn) {
+        //returns the status of a GIF. just the string
+        var outVal = "";
+        outVal = this.GIFarray[numIn].status;
+        return outVal;
+    },
+
+    toggleGIFanimation: function (numIn) {
+        //toggles the state of a GIF
+        var status = this.returnGIFanimationStatus(numIn);
+        if (status === "still") {
+            this.animateGIF(numIn);
+        } else if (status === "moving") {
+            this.stopGIF(numIn);
+        } else {
+            //don't know what status was, so force to stop
+            this.stopGIF(numIn);
         }
     },
+
+    addGIFtoStack: function () {
+        //adds gif from the currSingleObj
+        var newGIFsingleObj = jQuery.extend(true, {}, this.currSingleGIFobj);
+        this.GIFarray.push(newGIFsingleObj);
+    },
+
     EOF: ""  //place keeper
 };
+
+var APIresponseInputRec = {
+    bitly_gif_url: "",
+    embed_url: "",
+    url_fixed_height_still: "", //wid=354  ht=200
+    url_fixed_height_animated: "", //wid=354  ht=200
+    rating : "",
+    title : "",
+    date_posted : "",   
+    source_url : ""         //split it up to find wwww it came from
+};
+
+var responseObj = {
+    currResponseRec: APIresponseInputRec,
+    responseRecArray : [],  //array of currResponseRec
+
+    convertSingleRec: function (recDataItem) {
+        //converts a single data item to curr rec
+        this.currResponseRec.bitly_gif_url = recDataItem.bitly_gif_url;
+        this.embed_url = recDataItem.embed_url;
+        this.url_fixed_height_still = recDataItem.images.fixed_height_still.url;
+        this.url_fixed_height_animated = recDataItem.images.fixed_height.url;
+        this.currResponseRec.rating = recDataItem.rating;
+        this.currResponseRec.title = recDataItem.title;
+        this.currResponseRec.date_posted = recDataItem.import_datetime;
+        this.currResponseRec.source_url = recDataItem.source_post_url;
+    },
+
+    clearRecArray: function () {
+        var stopVal = this.responseRecArray.length;
+        for ( var i=0; i< )
+    }
+}
 
 
 var searchParmObj = {
