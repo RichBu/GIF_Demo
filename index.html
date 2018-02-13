@@ -82,23 +82,23 @@
             <div class="row">
                 <!-- main wrapper is row of two columns -->
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <!-- full width for question -->
-                    <div id="question">
+                    <!-- full width for GIF -->
+                    <div id="GIFdiv">
                         <p> Empty </p>
                     </div>
-                    <div id="answer_buttons"></div>
                 </div>
             </div>
             <div class="row">
+                <!-- blank row -->
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-                    <!--                    <div class="row ">  -->
-                    <!--                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">  -->
-                    <div id="GIFdiv"> 
-                        <button style="Float: left; " id="btnNextQuestion" class="bigButton " data-toggle="tooltip " title="Next Question">NEXT QUESTION</button>
+                    <div>
+                        <p>
+                            <hr>
+                        </p>
                     </div>
                 </div>
             </div>
-            <div class="row" >
+            <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                     <!--                    <div class="row ">  -->
                     <!--                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">  -->
@@ -107,10 +107,39 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <!-- blank row -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                    <div>
+                        <p>
+                            <hr>
+                        </p>
+                    </div>
+                </div>
+            </div>
             <div class="row" id="inputForm">
                 <p></p>
             </div>
-            <div class="row" id="buttonRow">
+            <div class="row">
+                <!-- blank row -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                    <div>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                    <p>
+                        <hr>
+                    </p>
+                    <div id="controlBTTNS">
+                        <button style="Float: left; " id="btnClear" class="bigButton " data-toggle="tooltip" title="Clear Buttons">CLEAR</button>
+                        <button style="Float: left; " id="btnReload" class="bigButton " data-toggle="tooltip" title="Reload / research">RELOAD</button>
+                        <button style="Float: left; " id="btnStopAll" class="bigButton " data-toggle="tooltip" title="Stop all animations">STOP ALL</button>
+                        <button style="Float: left; " id="btnRunAll" class="bigButton " data-toggle="tooltip" title="Run all animations">RUN ALL</button>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 <p></p>
@@ -124,7 +153,7 @@
     <!-- Modal windows come up next -->
     <!--   Modal test windows until rest of logic is complete  -->
     <!-- Won Modal -->
- 
+
 
     <!-- MODAL Settings  -->
     <div id="modSettings" class="modal">
@@ -222,7 +251,7 @@
                 console.log("button =" + bttnClicked);
                 //nextQuestionStart();
             };
-            $(".btn-info").click( evalButtonPress );
+            $(".btn-info").click(evalButtonPress);
 
 
             //$("#" + configData.bttnNextQuest).css("display", "none"); //hide button
