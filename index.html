@@ -255,9 +255,9 @@
                 //all of the buttons call this routine
                 var bttnClicked = $(this).attr("data-button");
                 console.log("button =" + bttnClicked);
-                var queryURL = configData.GiphyURL;
-                queryURL += configData.GiphyStr;
-                queryURL += configData.GiphyKey;
+                var searchStr = buttonObj.retSearchStr(bttnClicked);
+                //call a response generator
+                var queryURL = responseObj.generateAPIprompt( searchStr );
                 $.ajax({
                     url: queryURL,
                     method: 'GET'

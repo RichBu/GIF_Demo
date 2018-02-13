@@ -24,10 +24,15 @@ var configData = {
     classGif: "img-gif",       //for mass selection
     dataGif: "data-gif",       //returned on click
     imgDir: "assets/images/",
+    imgBlocked: "", //what image to display if blocked
     gifQty: 10,  //how many GIF to display
-    GiphyURL: "https://api.giphy.com/v1/gifs/trending?",  //url of the site
-    GiphyStr: "api_key=",
-    GiphyKey: "EH4xHA1FINek56s43yv4PWrOXL7noTOb"  //key for this project
+    //GiphyURL: "https://api.giphy.com/v1/gifs/trending?",  //url of the site
+    GiphyURL: "https://api.giphy.com/v1/gifs/search?",  //url of the site
+    GiphySrch01: "q=",
+    GiphySrch02: "&limit=20",  //limit
+    GiphySrch03: "&offset=0",  //offset, like a page down
+    GiphyKeyPreface: "&api_key=",
+    GiphyKeyValue: "EH4xHA1FINek56s43yv4PWrOXL7noTOb"  //key for this project
 };
 
 
@@ -244,6 +249,21 @@ var APIresponseInputRec = {
 var responseObj = {
     currResponseRec: APIresponseInputRec,
     responseRecArray: [],  //array of currResponseRec
+
+    generateAPIprompt: function( topicIn ) {
+        //generic API generator for Giphy
+        //should move to an API object
+        var topicSearchString = $.trim( topicIn );
+        var outVal = "";
+        outVal = configData.GiphyURL;
+        outVal += configData.GiphySrch01 + topicSearchString;
+        outVal += configData.GiphySrch02;
+        outVal += configData.GiphySrch03;
+        outVal += configData.GiphyKeyPreface;
+        outVal += configData.GiphyKeyValue;
+        console.log( outVal );
+        return outVal;
+    },
 
     convertSingleRec: function (recDataItem) {
         //converts a single data item to curr rec
