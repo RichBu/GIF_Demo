@@ -262,6 +262,9 @@
                     url: queryURL,
                     method: 'GET'
                 }).then(function (response) {
+                    //got message back
+                    responseObj.pushResponseToEverything( response ); 
+                    //responseObj.pushWholeResponseToArray( response );
                     console.log(response);
                 });
             };

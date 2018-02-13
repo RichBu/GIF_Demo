@@ -24,7 +24,7 @@ var configData = {
     classGif: "img-gif",       //for mass selection
     dataGif: "data-gif",       //returned on click
     imgDir: "assets/images/",
-    gifQty: 5,  //how many GIF to display
+    gifQty: 10,  //how many GIF to display
     GiphyURL: "https://api.giphy.com/v1/gifs/trending?",  //url of the site
     GiphyStr: "api_key=",
     GiphyKey: "EH4xHA1FINek56s43yv4PWrOXL7noTOb"  //key for this project
@@ -150,6 +150,10 @@ var gifSingleObj = {
     urlStill: "",
     urlAnimated: "",
     topic: "",         //topic associated with
+    rating: "",
+    title: "",
+    date_posted: "",
+    source_url: "",
     searchString: "",  //search string used to search this
     EOF: "" //just place keeper
 };
@@ -168,7 +172,7 @@ var GIFobj = {
 
     clearGIFarray: function () {
         //now clear out the array
-        var endVal = GIFarray.length;
+        var endVal = this.GIFarray.length;
         for (var i = 0; i < endVal; i++) {
             this.GIFarray.pop();
         };
@@ -220,6 +224,7 @@ var GIFobj = {
         //adds gif from the currSingleObj
         var newGIFsingleObj = jQuery.extend(true, {}, this.currSingleGIFobj);
         this.GIFarray.push(newGIFsingleObj);
+        //should this draw ?
     },
 
     EOF: ""  //place keeper
@@ -230,22 +235,22 @@ var APIresponseInputRec = {
     embed_url: "",
     url_fixed_height_still: "", //wid=354  ht=200
     url_fixed_height_animated: "", //wid=354  ht=200
-    rating : "",
-    title : "",
-    date_posted : "",   
-    source_url : ""         //split it up to find wwww it came from
+    rating: "",
+    title: "",
+    date_posted: "",
+    source_url: ""         //split it up to find wwww it came from
 };
 
 var responseObj = {
     currResponseRec: APIresponseInputRec,
-    responseRecArray : [],  //array of currResponseRec
+    responseRecArray: [],  //array of currResponseRec
 
     convertSingleRec: function (recDataItem) {
         //converts a single data item to curr rec
         this.currResponseRec.bitly_gif_url = recDataItem.bitly_gif_url;
-        this.embed_url = recDataItem.embed_url;
-        this.url_fixed_height_still = recDataItem.images.fixed_height_still.url;
-        this.url_fixed_height_animated = recDataItem.images.fixed_height.url;
+        this.currResponseRec.embed_url = recDataItem.embed_url;
+        this.currResponseRec.url_fixed_height_still = recDataItem.images.fixed_height_still.url;
+        this.currResponseRec.url_fixed_height_animated = recDataItem.images.fixed_height.url;
         this.currResponseRec.rating = recDataItem.rating;
         this.currResponseRec.title = recDataItem.title;
         this.currResponseRec.date_posted = recDataItem.import_datetime;
@@ -254,7 +259,67 @@ var responseObj = {
 
     clearRecArray: function () {
         var stopVal = this.responseRecArray.length;
-        for ( var i=0; i< )
+        for (var i = 0; i < stopVal; i++) {
+            this.responseRecArray.pop();
+        }
+    },
+
+    pushOneRecToArray: function (recDataItem) {
+        //takes incoming rec, converts it, then pushes it to array
+        this.convertSingleRec(recDataItem);  //load currResponseRec
+        //need to make a copy of object prior to pushing
+        var newRec = jQuery.extend(true, {}, this.currResponseRec );
+        this.responseRecArray.push( newRec );  //add to array
+    },
+
+    pushWholeResponseToArray: function (responseIn) {
+        var numReturned = responseIn.data.length;
+        console.log(numReturned);
+        //clear out the current storage
+        this.clearRecArray();
+        for (var i = 0; i < numReturned; i++) {
+            this.pushOneRecToArray( responseIn.data[i] );
+        };
+    },
+
+    exportSingleRecToGFI : function ( responseRecToExport ) {
+        //export a single rec to the GIFobj
+        //use simple copy for association
+        GIFobj.currSingleGIFobj.status = "";
+        GIFobj.currSingleGIFobj.TagID = "";
+        GIFobj.currSingleGIFobj.urlStill = responseRecToExport.url_fixed_height_still;
+        GIFobj.currSingleGIFobj.urlAnimated = responseRecToExport.url_fixed_height_animated;
+        GIFobj.currSingleGIFobj.rating = responseRecToExport.rating;
+        GIFobj.currSingleGIFobj.title = responseRecToExport.title;
+        GIFobj.currSingleGIFobj.date_posted = responseRecToExport.date_posted;
+        GIFobj.currSingleGIFobj.source_url = responseRecToExport.source_url;
+        GIFobj.addGIFtoStack();
+    },
+
+    exportEntireResponseToGIFarray : function () {
+        //prior to export:
+        //clear all img's on page
+        //clear GIF array
+        //then export
+        GIFobj.clearEverything();  //clear page and array
+        var stopVal = configData.gifQty;
+        //now need to make sure have enough responses
+        if ( this.responseRecArray.length < stopVal ) {
+            //so if the response back is less than the amount need to post,
+            //use the response length to limit how many to throw up
+            stopVal = this.responseRecArray.length;
+        };
+        for ( var i=0;  i < stopVal;  i++ ) {
+            //lopp thru all the response data up to specified quantity
+            this.exportSingleRecToGFI( this.responseRecArray[i]);
+        };
+    },
+
+    pushResponseToEverything : function ( responseIn ) {
+        //will clear everything then push to responseObj, GIFobj, then display
+        GIFobj.clearEverything();
+        this.pushWholeResponseToArray( responseIn ); 
+        this.exportEntireResponseToGIFarray(); //use built in array
     }
 }
 
