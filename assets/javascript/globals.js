@@ -261,7 +261,33 @@ var GIFobj = {
         $(newImage).css("margin", "5px");
         //$(newImage).text(topicIn);
         //$(newImage).attr("data-button", this.buttonArray.length - 1);
-        $(newImage).appendTo(divGIF);
+        var divPanel = $("<div>");
+        $(divPanel).addClass("panel");
+        $(divPanel).addClass("panel-info");
+        $(divPanel).addClass("panelMinMargin");
+        //$(divPanel).css("float", "left");
+        $(divPanel).css("width", "400px");
+        $(divPanel).css("height", "250px");
+
+        
+        var divPanelHead = $("<div>");
+        $(divPanelHead).addClass("panel-heading");
+        $(divPanelHead).addClass("panelMinPadding");
+
+        var panelHeadText = $("<p>");
+        var panelHeadTextString = "#" + GIFnum + " rated: " + this.GIFarray[GIFnum].rating;
+        $(panelHeadText).text(panelHeadTextString);
+        $(panelHeadText).appendTo(divPanelHead);
+
+        $(divPanelHead).appendTo(divPanel);
+
+        var divPanelBody = $("<div>");
+        $(divPanelBody).addClass("panel-body");
+        $(divPanelBody).addClass("panelMinPadding");
+        $(newImage).appendTo(divPanelBody);  //iamge goes onto the panel body
+        $(divPanelBody).appendTo(divPanel);
+
+        $(divPanel).appendTo(divGIF);
         this.stopGIF(GIFnum); //force it to stop and set all paraams for stop
     },
 
