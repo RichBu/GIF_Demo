@@ -229,7 +229,7 @@ var GIFobj = {
         } else {
             //don't know what status was, so force to stop
             this.stopGIF(numIn);
-        }
+        };
     },
 
     addGIFtoStack: function () {
@@ -243,31 +243,32 @@ var GIFobj = {
         //routine to place one GIF onto the page
         var divGIF = $(configData.divGIF);
         var newImage = $("<img>");
-        //$(newImage).addClass("btn");       //HTML
-        //$(newImage).addClass("btn-info");  //bootstrap
         var TagID = configData.idGif + GIFnum;
+
         this.GIFarray[GIFnum].TagID = TagID; 
         var toolTipStr = "title: " + this.GIFarray[GIFnum].title + "\n";
         toolTipStr += "date: " + this.GIFarray[GIFnum].date_posted;
+        toolTipStr += "\n\nclick to start / stop animation";
         $(newImage).attr("src", this.returnGIFstaticURL(GIFnum) );
         $(newImage).attr("id", TagID);
         $(newImage).attr("data-toggle", "tooltip" );
         $(newImage).attr("title", toolTipStr );
+        $(newImage).attr("data-image", GIFnum ); //data for click
         $(newImage).css("width", "356px" );
         $(newImage).css("height", "200px" );
         $(newImage).css("border", "2px" );
         $(newImage).css("margin", "5px")
         $(newImage).addClass(configData.classGif);  //for mass adds
         $(newImage).css("margin", "5px");
-        //$(newImage).text(topicIn);
-        //$(newImage).attr("data-button", this.buttonArray.length - 1);
+
+        //create <div> panel with 2 parts, header and content
         var divPanel = $("<div>");
         $(divPanel).addClass("panel");
         $(divPanel).addClass("panel-info");
         $(divPanel).addClass("panelMinMargin");
         //$(divPanel).css("float", "left");
-        $(divPanel).css("width", "376px");
-        $(divPanel).css("height", "250px");
+        $(divPanel).css("width", "368px");
+        $(divPanel).css("height", "230px");
 
         
         var divPanelHead = $("<div>");

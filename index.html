@@ -132,7 +132,7 @@
                     <div id="controlBTTNS">
                         <button style="Float: left; " id="btnReset" class="btn btn-warning bigButton" data-toggle="tooltip" title="Reset all buttons to original data">RESET</button>
                         <button style="Float: left; " id="btnClear" class="btn btn-warning bigButton" data-toggle="tooltip" title="Clear all the GIFs on screen">CLEAR</button>
-                        <button style="Float: left; " id="btnReload" class="btn btn-warning bigButton" data-toggle="tooltip" title="Reload / research">RELOAD</button>
+                        <!-- <button style="Float: left; " id="btnReload" class="btn btn-warning bigButton" data-toggle="tooltip" title="Reload / research">RELOAD</button>   -->
                         <button style="Float: left; " id="btnStopAll" class="btn btn-warning bigButton" data-toggle="tooltip" title="Stop all animations">STOP ALL</button>
                         <button style="Float: left; " id="btnRunAll" class="btn btn-warning bigButton" data-toggle="tooltip" title="Run all animations">RUN ALL</button>
                     </div>
@@ -185,9 +185,13 @@
             </h4>
             <p>GIF Demonstration Game by Rich Budek</p>
             <p></p>
-            <p>This game is meant to run inside of a browser.
+            <p>This app goes out to the web and fetches animated GIF's based
+                on a users topic pick.  There are 10 default buttons that show
+                up initially, but the user can add more by using the topic box.
             </p>
-            <p>GIF are loaded via AJAX based on topics selected by the user
+            <p>After the GIF's are loaded, the user can click on an image and
+                the GIFs animation will start or stop.  In addition, there are
+                4 buttons that can control the GIFs.
             </p>
             <p> </p>
             <div class="modal-footer">
@@ -206,11 +210,12 @@
             </h4>
             <p>GIF Demonstration by Rich Budek</p>
             <p></p>
-            <p>This game is meant to run inside of a browser using HTML and CSS for styling. Twitters BootStrap is used for
-                some of the more advanced display functions and popups.
+            <p>This demo is meant to showcase my talents as well as the options 
+                available for controlling GIFs within JavaScript.
             </p>
             <p>
-                This demonstration program searches on GIF's based on topics selected by the user.
+                The GIF's are located using API calls to Giphy which houses a database
+                of GIF's and their locations.
             </p>
             <p>Javascript and jQuery are the languages that do all of the processing and also manipulates the page's element's
                 using jQuery. are stored as objects in an array and then placed into the collection area using jAppend.
@@ -271,6 +276,13 @@
                 });
             };
 
+            var evalImgClick = function() {
+                //image was clicked
+                console.log("image clicked");
+                var imgClicked = $(this).attr("data-image");
+                GIFobj.toggleGIFanimation( imgClicked );
+            };
+
             $("." + configData.classTopicBttn).click(evalButtonPress);
 
             //submit button on topic input
@@ -300,6 +312,11 @@
                 };
             });
 
+            $("#btnClear").on("click", function (event) {
+                //clear all of the GIF off of the page
+                GIFobj.clearEverything();
+            });
+
             $("#btnStopAll").on("click", function (event) {
                 //stop all the animations.  Loop thru all the GIFs and call
                 //the stop function
@@ -310,7 +327,8 @@
                 };
             });
 
-
+            var imgClickClass = "." + configData.classGif;
+            $(document.body).on("click", imgClickClass, evalImgClick);
 
             //here is the main loop now for key presses
             document.onkeyup = function (event) {
