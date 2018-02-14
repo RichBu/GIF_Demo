@@ -80,15 +80,6 @@
                 </div>
             </div>
             <div class="row">
-                <!-- main wrapper is row of two columns -->
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <!-- full width for GIF -->
-                    <div id="GIFdiv">
-                        <p> Empty </p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
                 <!-- blank row -->
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                     <div>
@@ -148,7 +139,18 @@
                 </div>
             </div>
             <div class="row">
-                <p></p>
+                <p>
+                    <hr/>
+                </p>
+            </div>
+            <div class="row">
+                <!-- main wrapper is row of two columns -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <!-- full width for GIF -->
+                    <div id="GIFdiv">
+                        <p> Empty </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -256,16 +258,16 @@
                 var bttnClicked = $(this).attr("data-button");
                 console.log("button =" + bttnClicked);
                 var searchStr = buttonObj.retSearchStr(bttnClicked);
-                //call a response generator
-                var queryURL = responseObj.generateAPIprompt( searchStr );
+                //call an API query generator
+                var queryURL = responseObj.generateAPIprompt(searchStr);
                 $.ajax({
                     url: queryURL,
                     method: 'GET'
                 }).then(function (response) {
                     //got message back
-                    responseObj.pushResponseToEverything( response ); 
-                    //responseObj.pushWholeResponseToArray( response );
+                    responseObj.pushResponseToEverything(response);
                     console.log(response);
+                    GIFobj.displayAllGIF();
                 });
             };
 
@@ -277,6 +279,7 @@
                 var topicInput = $("#topic-input");
                 var newTopic = $(topicInput).val().trim();
                 //clear out the input field
+                $(topicInput).val(" ");
                 topicObj.addTopic(newTopic);
                 buttonObj.refreshAllButtons();
                 $("." + configData.classTopicBttn).click(evalButtonPress);
@@ -288,7 +291,24 @@
                 $("." + configData.classTopicBttn).click(evalButtonPress);
             });
 
-            //$("#" + configData.bttnNextQuest).css("display", "none"); //hide button
+            $("#btnRunAll").on("click", function (event) {
+                //run all the animations.  Loop thru all the GIFs and call
+                //the stop function
+                var numGIF = GIFobj.GIFarray.length;
+                for (var i = 0; i < numGIF; i++) {
+                    GIFobj.animateGIF(i);
+                };
+            });
+
+            $("#btnStopAll").on("click", function (event) {
+                //stop all the animations.  Loop thru all the GIFs and call
+                //the stop function
+                console.log("entered stop function");
+                var numGIF = GIFobj.GIFarray.length;
+                for (var i = 0; i < numGIF; i++) {
+                    GIFobj.stopGIF(i);
+                };
+            });
 
 
 

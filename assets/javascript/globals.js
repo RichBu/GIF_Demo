@@ -23,6 +23,7 @@ var configData = {
     dataTopicBttn: "data-bttnTopic",  //used on topic buttons
     classGif: "img-gif",       //for mass selection
     dataGif: "data-gif",       //returned on click
+    idGif: "GIF",               //preface before the ID tage
     imgDir: "assets/images/",
     imgBlocked: "", //what image to display if blocked
     gifQty: 10,  //how many GIF to display
@@ -212,6 +213,12 @@ var GIFobj = {
         return outVal;
     },
 
+    returnGIFstaticURL: function (numIn) {
+        var outVal = "";
+        outVal = this.GIFarray[numIn].urlStill;
+        return outVal;
+    },
+
     toggleGIFanimation: function (numIn) {
         //toggles the state of a GIF
         var status = this.returnGIFanimationStatus(numIn);
@@ -232,6 +239,39 @@ var GIFobj = {
         //should this draw ?
     },
 
+    displayOneGIF: function (GIFnum) {
+        //routine to place one GIF onto the page
+        var divGIF = $(configData.divGIF);
+        var newImage = $("<img>");
+        //$(newImage).addClass("btn");       //HTML
+        //$(newImage).addClass("btn-info");  //bootstrap
+        var TagID = configData.idGif + GIFnum;
+        this.GIFarray[GIFnum].TagID = TagID; 
+        var toolTipStr = "title: " + this.GIFarray[GIFnum].title + "\n";
+        toolTipStr += "date: " + this.GIFarray[GIFnum].date_posted;
+        $(newImage).attr("src", this.returnGIFstaticURL(GIFnum) );
+        $(newImage).attr("id", TagID);
+        $(newImage).attr("data-toggle", "tooltip" );
+        $(newImage).attr("title", toolTipStr );
+        $(newImage).css("width", "356px" );
+        $(newImage).css("height", "200px" );
+        $(newImage).css("border", "2px" );
+        $(newImage).css("margin", "5px")
+        $(newImage).addClass(configData.classGif);  //for mass adds
+        $(newImage).css("margin", "5px");
+        //$(newImage).text(topicIn);
+        //$(newImage).attr("data-button", this.buttonArray.length - 1);
+        $(newImage).appendTo(divGIF);
+        this.stopGIF(GIFnum); //force it to stop and set all paraams for stop
+    },
+
+    displayAllGIF: function (GIFnum)  {
+        var numGIF = this.GIFarray.length;
+        for ( var i=0; i<numGIF; i++) {
+            this.displayOneGIF( i );
+        };
+    },
+
     EOF: ""  //place keeper
 };
 
@@ -250,10 +290,10 @@ var responseObj = {
     currResponseRec: APIresponseInputRec,
     responseRecArray: [],  //array of currResponseRec
 
-    generateAPIprompt: function( topicIn ) {
+    generateAPIprompt: function (topicIn) {
         //generic API generator for Giphy
         //should move to an API object
-        var topicSearchString = $.trim( topicIn );
+        var topicSearchString = $.trim(topicIn);
         var outVal = "";
         outVal = configData.GiphyURL;
         outVal += configData.GiphySrch01 + topicSearchString;
@@ -261,7 +301,7 @@ var responseObj = {
         outVal += configData.GiphySrch03;
         outVal += configData.GiphyKeyPreface;
         outVal += configData.GiphyKeyValue;
-        console.log( outVal );
+        console.log(outVal);
         return outVal;
     },
 
@@ -288,8 +328,8 @@ var responseObj = {
         //takes incoming rec, converts it, then pushes it to array
         this.convertSingleRec(recDataItem);  //load currResponseRec
         //need to make a copy of object prior to pushing
-        var newRec = jQuery.extend(true, {}, this.currResponseRec );
-        this.responseRecArray.push( newRec );  //add to array
+        var newRec = jQuery.extend(true, {}, this.currResponseRec);
+        this.responseRecArray.push(newRec);  //add to array
     },
 
     pushWholeResponseToArray: function (responseIn) {
@@ -298,11 +338,11 @@ var responseObj = {
         //clear out the current storage
         this.clearRecArray();
         for (var i = 0; i < numReturned; i++) {
-            this.pushOneRecToArray( responseIn.data[i] );
+            this.pushOneRecToArray(responseIn.data[i]);
         };
     },
 
-    exportSingleRecToGFI : function ( responseRecToExport ) {
+    exportSingleRecToGFI: function (responseRecToExport) {
         //export a single rec to the GIFobj
         //use simple copy for association
         GIFobj.currSingleGIFobj.status = "";
@@ -316,7 +356,7 @@ var responseObj = {
         GIFobj.addGIFtoStack();
     },
 
-    exportEntireResponseToGIFarray : function () {
+    exportEntireResponseToGIFarray: function () {
         //prior to export:
         //clear all img's on page
         //clear GIF array
@@ -324,21 +364,21 @@ var responseObj = {
         GIFobj.clearEverything();  //clear page and array
         var stopVal = configData.gifQty;
         //now need to make sure have enough responses
-        if ( this.responseRecArray.length < stopVal ) {
+        if (this.responseRecArray.length < stopVal) {
             //so if the response back is less than the amount need to post,
             //use the response length to limit how many to throw up
             stopVal = this.responseRecArray.length;
         };
-        for ( var i=0;  i < stopVal;  i++ ) {
+        for (var i = 0; i < stopVal; i++) {
             //lopp thru all the response data up to specified quantity
-            this.exportSingleRecToGFI( this.responseRecArray[i]);
+            this.exportSingleRecToGFI(this.responseRecArray[i]);
         };
     },
 
-    pushResponseToEverything : function ( responseIn ) {
+    pushResponseToEverything: function (responseIn) {
         //will clear everything then push to responseObj, GIFobj, then display
         GIFobj.clearEverything();
-        this.pushWholeResponseToArray( responseIn ); 
+        this.pushWholeResponseToArray(responseIn);
         this.exportEntireResponseToGIFarray(); //use built in array
     }
 }
