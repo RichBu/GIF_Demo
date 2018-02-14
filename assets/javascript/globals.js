@@ -266,16 +266,18 @@ var GIFobj = {
         $(divPanel).addClass("panel-info");
         $(divPanel).addClass("panelMinMargin");
         //$(divPanel).css("float", "left");
-        $(divPanel).css("width", "400px");
+        $(divPanel).css("width", "376px");
         $(divPanel).css("height", "250px");
 
         
         var divPanelHead = $("<div>");
         $(divPanelHead).addClass("panel-heading");
         $(divPanelHead).addClass("panelMinPadding");
+        $(divPanelHead).css("height", "20px");
 
         var panelHeadText = $("<p>");
-        var panelHeadTextString = "#" + GIFnum + " rated: " + this.GIFarray[GIFnum].rating;
+        //"\xa0\xa0\xa0\xa0\xa0\xa0\xa0"
+        var panelHeadTextString = "#" + GIFnum  +  " \xa0\xa0\xa0\xa0 rated: " + this.GIFarray[GIFnum].rating;
         $(panelHeadText).text(panelHeadTextString);
         $(panelHeadText).appendTo(divPanelHead);
 
