@@ -63,20 +63,20 @@
                             <h2> </h2>
                         </p>
                     </div>
-                    <div class="row">
+                    <div class="row" style="padding: 0px 50px 0px" >
                         <!-- This is the column with buttons -->
                         <!--
                         <button style="Float: left; " id="btnPlay" class="bigButton " data-toggle="tooltip " title="Play the game ">PLAY </button>
                         <button style="Float: left; " id="btnReport" class="bigButton " data-toggle="tooltip " title="Future -- will show report of what was missed.">REPORT </button>
                         <button style="Float: left; " id="btnHiScores" class="bigButton " data-toggle="tooltip " title="high scores ">HI SCORES</button>
                         -->
-                        <button style="Float: left; " id="btnHelp" class="bigButton " data-toggle="tooltip " title="Help and about ">
-                            <span class="glyphicon glyphicon-info-sign "></span>
-                        </button>
-                        <button style="Float: left; " id="btnSettings" class="bigButton " data-toggle="tooltip " title="Settings for game ">
+                        <button style="Float: right; " id="btnSettings" class="bigButton " data-toggle="tooltip " title="Settings for game ">
                             <span class="glyphicon glyphicon-cog "></span>
                         </button>
-                    </div>
+                        <button style="Float: right; " id="btnHelp" class="bigButton " data-toggle="tooltip " title="Help and about ">
+                                <span class="glyphicon glyphicon-info-sign "></span>
+                            </button>
+                        </div>
                 </div>
             </div>
             <div class="row">
@@ -93,6 +93,7 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                     <!--                    <div class="row ">  -->
                     <!--                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">  -->
+                    <span><h3>Topic Buttons:</h3></span>    
                     <div id="topicButtons">
                         <button style="Float: left; " id="btnNextQuestion" class="bigButton " data-toggle="tooltip " title="Next Question">NEXT QUESTION</button>
                     </div>
@@ -185,13 +186,11 @@
             </h4>
             <p>GIF Demonstration Game by Rich Budek</p>
             <p></p>
-            <p>This app goes out to the web and fetches animated GIF's based
-                on a users topic pick.  There are 10 default buttons that show
-                up initially, but the user can add more by using the topic box.
+            <p>This app goes out to the web and fetches animated GIF's based on a users topic pick. There are 10 default buttons
+                that show up initially, but the user can add more by using the topic box.
             </p>
-            <p>After the GIF's are loaded, the user can click on an image and
-                the GIFs animation will start or stop.  In addition, there are
-                4 buttons that can control the GIFs.
+            <p>After the GIF's are loaded, the user can click on an image and the GIFs animation will start or stop. In addition,
+                there are 4 buttons that can control the GIFs.
             </p>
             <p> </p>
             <div class="modal-footer">
@@ -210,12 +209,10 @@
             </h4>
             <p>GIF Demonstration by Rich Budek</p>
             <p></p>
-            <p>This demo is meant to showcase my talents as well as the options 
-                available for controlling GIFs within JavaScript.
+            <p>This demo is meant to showcase my talents as well as the options available for controlling GIFs within JavaScript.
             </p>
             <p>
-                The GIF's are located using API calls to Giphy which houses a database
-                of GIF's and their locations.
+                The GIF's are located using API calls to Giphy which houses a database of GIF's and their locations.
             </p>
             <p>Javascript and jQuery are the languages that do all of the processing and also manipulates the page's element's
                 using jQuery. are stored as objects in an array and then placed into the collection area using jAppend.
@@ -241,7 +238,6 @@
     <script src="assets/javascript/script.js "></script>
     <script src="assets/javascript/modals.js "></script>
     <script>
-
         $(document).ready(function () {
             //activate BootStrap tool tips
             //but don't turn on for phone / tablet
@@ -276,11 +272,11 @@
                 });
             };
 
-            var evalImgClick = function() {
+            var evalImgClick = function () {
                 //image was clicked
                 console.log("image clicked");
                 var imgClicked = $(this).attr("data-image");
-                GIFobj.toggleGIFanimation( imgClicked );
+                GIFobj.toggleGIFanimation(imgClicked);
             };
 
             $("." + configData.classTopicBttn).click(evalButtonPress);

@@ -112,18 +112,33 @@ var buttonObj = {
     addNewButton: function (topicIn) {
         //takes a topic and adds a button to page
         //assume topic in array already
+        //put a column around each button
         this.currSingleButtonObj.topic = topicIn;
         this.currSingleButtonObj.searchTerm = topicIn;  //right now both the same
         this.addButtonToArray(this.currSingleButtonObj);
         var divButtons = $(configData.divTopicButtons);
+
+        var divCol = $("<div>");
+        $(divCol).addClass("col-lg-2");
+        $(divCol).addClass("col-md-2");
+        $(divCol).addClass("col-sm-3");
+        $(divCol).addClass("col-xs-4");
+
         var newButton = $("<button>");
         $(newButton).addClass("btn");       //HTML
         $(newButton).addClass("btn-info");  //bootstrap
         $(newButton).addClass(configData.classTopicBttn);  //for mass adds
         $(newButton).css("margin", "5px");
+        $(newButton).css("width", "100%");
+        $(newButton).css("height", "40px");
+        $(newButton).css("white-space", "normal !important");
+        //$(newButton).text( "" );
+
         $(newButton).text(topicIn);
         $(newButton).attr("data-button", this.buttonArray.length - 1);
-        $(newButton).appendTo(divButtons);
+
+        $(newButton).appendTo(divCol);
+        $(divCol).appendTo(divButtons);
     },
 
     refreshAllButtons: function () {
